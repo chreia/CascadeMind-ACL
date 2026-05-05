@@ -1,0 +1,25 @@
+name: release-checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  release-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile Python entrypoints
+        run: |
+          python -m py_compile \
+            best.py \
+            baseline.py \
+            train_ensemble.py \
+            scripts/check_release.py \
+            scripts/run_camera_ready_experiments.py \
+            experiments/*.py
+      - name: Release checklist
+        run: python scripts/check_release.py
